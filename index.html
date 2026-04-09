@@ -4,6 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Toad Road</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&display=swap"
+      rel="stylesheet"
+    />
     <link rel="icon" type="image/jpeg" href="public/twotracksicon.jpg" />
     <style>
       *,
@@ -74,39 +79,46 @@
         width: 100%;
         padding: 11px 0;
         border-radius: 999px;
+        border: 2.5px solid transparent;
         text-decoration: none;
-        font-family: sans-serif;
-        font-size: 15px;
-        font-weight: 600;
-        color: #fff;
-        transition: opacity 0.2s;
+        font-family: "Dancing Script", cursive;
+        font-size: 18px;
+        font-weight: 700;
+        background: rgba(255, 255, 255, 0.75);
+        -webkit-text-stroke: 0.5px #000;
+        color: #000;
+        transition: background 0.2s;
       }
 
       .social-links a:hover {
-        opacity: 0.85;
+        background: rgba(255, 255, 255, 0.92);
       }
 
       .social-links a.youtube {
-        background: #ff0000;
+        border-color: #ff0000;
       }
       .social-links a.spotify {
-        background: #1db954;
+        border-color: #1db954;
       }
+
       .social-links a.instagram {
-        background: radial-gradient(
-          circle at 30% 107%,
-          #fdf497 0%,
-          #fd5949 45%,
-          #d6249f 60%,
-          #285aeb 90%
-        );
+        border-color: #d6249f;
       }
 
       .social-links svg {
         width: 20px;
         height: 20px;
-        fill: #fff;
         flex-shrink: 0;
+      }
+
+      .social-links a.youtube svg {
+        fill: #ff0000;
+      }
+      .social-links a.spotify svg {
+        fill: #1db954;
+      }
+      .social-links a.instagram svg {
+        fill: #d6249f;
       }
     </style>
   </head>
