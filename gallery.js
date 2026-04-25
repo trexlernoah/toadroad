@@ -157,7 +157,7 @@ function navigate(dir) {
   loadLightboxImage(currentIdx);
 }
 
-lbClose.addEventListener("click", closeLightbox);
+if (lbClose) lbClose.addEventListener("click", closeLightbox);
 backdrop.addEventListener("click", closeLightbox);
 lbPrev.addEventListener("click", () => navigate(-1));
 lbNext.addEventListener("click", () => navigate(1));
