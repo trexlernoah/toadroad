@@ -1,8 +1,18 @@
+/**
+ * gallery.js
+ * Fetches manifest.json from R2, shows album list first,
+ * loads photos only when an album is selected.
+ */
+
 const MANIFEST_URL = "https://images.toadroad.online/manifest.json";
 
-let allPhotos = []; // flat array of all photo objects
-let filtered = []; // currently visible photos
+// ── State ──────────────────────────────────────────────────────────────────
+
+let albums = []; // all album objects from manifest
+let filtered = []; // photos in the currently open album
 let currentIdx = 0; // lightbox index into `filtered`
+
+// ── DOM refs ───────────────────────────────────────────────────────────────
 
 const grid = document.getElementById("grid");
 const loading = document.getElementById("loading");
@@ -18,16 +28,16 @@ const lbClose = document.getElementById("lb-close");
 const lbPrev = document.getElementById("lb-prev");
 const lbNext = document.getElementById("lb-next");
 
+// ── Boot ───────────────────────────────────────────────────────────────────
+
 async function init() {
   try {
     const res = await fetch(MANIFEST_URL);
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     const manifest = await res.json();
-
-    allPhotos = manifest.albums.flatMap((album) => album.photos);
-
-    buildAlbumTabs(manifest.albums);
-    showPhotos(allPhotos);
+    albums = manifest.albums;
+    loading.remove();
+    showAlbumList();
   } catch (err) {
     console.error("Failed to load manifest:", err);
     loading.remove();
@@ -36,60 +46,82 @@ async function init() {
   }
 }
 
-function buildAlbumTabs(albums) {
+// ── Album list view ────────────────────────────────────────────────────────
+
+function showAlbumList() {
+  albumStrip.hidden = true;
+  grid.querySelectorAll(".album-card, .tile").forEach((el) => el.remove());
+  emptyMsg.hidden = true;
+
+  if (albums.length === 0) {
+    emptyMsg.hidden = false;
+    return;
+  }
+
   albums.forEach((album) => {
-    const btn = document.createElement("button");
-    btn.className = "album-tab";
-    btn.dataset.album = album.slug;
-    btn.textContent = album.name;
-    albumStrip.appendChild(btn);
-  });
+    const card = document.createElement("div");
+    card.className = "album-card";
 
-  albumStrip.addEventListener("click", (e) => {
-    const tab = e.target.closest(".album-tab");
-    if (!tab) return;
+    const cover = document.createElement("div");
+    cover.className = "album-cover";
 
-    albumStrip
-      .querySelectorAll(".album-tab")
-      .forEach((t) => t.classList.remove("active"));
-    tab.classList.add("active");
+    if (album.cover_url) {
+      const img = document.createElement("img");
+      img.src = album.cover_url;
+      img.alt = album.name;
+      img.loading = "lazy";
+      img.addEventListener("load", () => img.classList.add("loaded"));
+      cover.appendChild(img);
+    } else {
+      cover.classList.add("no-cover");
+    }
 
-    const slug = tab.dataset.album;
-    const photos =
-      slug === "all"
-        ? allPhotos
-        : allPhotos.filter((p) => p.album_slug === slug);
+    const info = document.createElement("div");
+    info.className = "album-info";
 
-    showPhotos(photos);
+    const name = document.createElement("span");
+    name.className = "album-name";
+    name.textContent = album.name;
+
+    const count = document.createElement("span");
+    count.className = "album-count";
+    count.textContent = `${album.count} photo${album.count !== 1 ? "s" : ""}`;
+
+    info.appendChild(name);
+    info.appendChild(count);
+    card.appendChild(cover);
+    card.appendChild(info);
+    card.addEventListener("click", () => openAlbum(album));
+    grid.appendChild(card);
   });
 }
 
-function showPhotos(photos) {
-  filtered = photos;
+// ── Album photo view ───────────────────────────────────────────────────────
 
-  grid.querySelectorAll(".tile").forEach((t) => t.remove());
-  loading.hidden = true;
-  emptyMsg.hidden = photos.length > 0;
+function openAlbum(album) {
+  filtered = album.photos;
 
-  if (photos.length === 0) return;
+  albumStrip.hidden = false;
+  albumStrip.innerHTML = "";
 
-  photos.forEach((photo, idx) => {
+  const backBtn = document.createElement("button");
+  backBtn.className = "album-tab active";
+  backBtn.textContent = "← " + album.name;
+  backBtn.addEventListener("click", showAlbumList);
+  albumStrip.appendChild(backBtn);
+
+  grid.querySelectorAll(".album-card, .tile").forEach((el) => el.remove());
+
+  filtered.forEach((photo, idx) => {
     const tile = document.createElement("div");
     tile.className = "tile";
-    tile.dataset.idx = idx;
 
     const img = document.createElement("img");
+    img.src = photo.thumb_url;
     img.alt = photo.title || "";
     img.loading = "lazy";
     img.decoding = "async";
-
-    if (photo.thumb_width && photo.thumb_height) {
-      img.width = photo.thumb_width;
-      img.height = photo.thumb_height;
-    }
-
     img.addEventListener("load", () => img.classList.add("loaded"));
-    img.src = photo.thumb_url;
 
     const overlay = document.createElement("div");
     overlay.className = "tile-overlay";
@@ -101,12 +133,12 @@ function showPhotos(photos) {
     overlay.appendChild(titleEl);
     tile.appendChild(img);
     tile.appendChild(overlay);
-
     tile.addEventListener("click", () => openLightbox(idx));
-
     grid.appendChild(tile);
   });
 }
+
+// ── Lightbox ───────────────────────────────────────────────────────────────
 
 function openLightbox(idx) {
   currentIdx = idx;
@@ -134,6 +166,7 @@ function loadLightboxImage(idx) {
   lbTitle.textContent = photo.title || "";
   lbDownload.href = photo.url;
   lbDownload.setAttribute("download", (photo.title || "photo") + ".jpg");
+
   lbPrev.style.visibility = idx > 0 ? "visible" : "hidden";
   lbNext.style.visibility = idx < filtered.length - 1 ? "visible" : "hidden";
 
@@ -157,6 +190,8 @@ function navigate(dir) {
   loadLightboxImage(currentIdx);
 }
 
+// ── Event listeners ────────────────────────────────────────────────────────
+
 if (lbClose) lbClose.addEventListener("click", closeLightbox);
 backdrop.addEventListener("click", closeLightbox);
 lbPrev.addEventListener("click", () => navigate(-1));
@@ -177,7 +212,6 @@ lightbox.addEventListener(
   },
   { passive: true }
 );
-
 lightbox.addEventListener(
   "touchend",
   (e) => {
@@ -186,5 +220,7 @@ lightbox.addEventListener(
   },
   { passive: true }
 );
+
+// ── Start ──────────────────────────────────────────────────────────────────
 
 init();
