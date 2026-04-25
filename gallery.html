@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Photos · Toad Road</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" type="image/jpeg" href="public/twotracksicon.jpg" />
+    <link rel="stylesheet" href="gallery.css" />
+  </head>
+  <body>
+    <header class="nav">
+      <a href="index.html" class="nav-back">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polyline points="15 18 9 12 15 6" />
+        </svg>
+        Toad Road
+      </a>
+      <span class="nav-title">Photos</span>
+    </header>
+    <section class="about">
+      <h1 class="about-name">Toad Road</h1>
+      <p class="about-bio">Toad Road</p>
+    </section>
+
+    <div class="album-strip" id="album-strip">
+      <button class="album-tab active" data-album="all">All</button>
+    </div>
+
+    <main class="gallery-main">
+      <div class="grid" id="grid">
+        <div class="loading" id="loading">
+          <div class="spinner"></div>
+        </div>
+      </div>
+      <p class="empty-msg" id="empty-msg" hidden>No photos found.</p>
+    </main>
+
+    <div class="lightbox" id="lightbox" hidden aria-modal="true" role="dialog">
+      <button class="lb-arrow lb-prev" id="lb-prev" aria-label="Previous">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polyline points="15 18 9 12 15 6" />
+        </svg>
+      </button>
+      <div class="lb-img-wrap">
+        <img class="lb-img" id="lb-img" src="" alt="" />
+        <div class="lb-spinner" id="lb-spinner" hidden></div>
+      </div>
+      <button class="lb-arrow lb-next" id="lb-next" aria-label="Next">
+        <svg
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          stroke-width="2"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+        >
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
+      </button>
+      <div class="lb-footer">
+        <span class="lb-title" id="lb-title"></span>
+        <a class="lb-download" id="lb-download" download>
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          >
+            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+            <polyline points="7 10 12 15 17 10" />
+            <line x1="12" y1="15" x2="12" y2="3" />
+          </svg>
+          Download
+        </a>
+      </div>
+    </div>
+    <div class="lb-backdrop" id="lb-backdrop" hidden></div>
+
+    <script src="gallery.js"></script>
+  </body>
+</html>

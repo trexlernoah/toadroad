@@ -1,0 +1,119 @@
+*,
+*::before,
+*::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html,
+body {
+  width: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
+}
+
+.hero {
+  width: 100vw;
+  min-height: 100vh;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hero img {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
+  z-index: 0;
+}
+
+.player {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: min(350px, calc(100vw - 32px));
+  padding: 16px 0;
+}
+
+.player iframe {
+  width: 100%;
+  height: 470px;
+  border: 0;
+}
+
+/* ── Social links ─────────────────────────────────────────────── */
+
+.social-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+  width: 100%;
+}
+
+.social-links a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: 11px 0;
+  padding-left: 40px;
+  border-radius: 999px;
+  border: 2.5px solid transparent;
+  text-decoration: none;
+  font-family: "Dancing Script", cursive;
+  font-size: 18px;
+  font-weight: 700;
+  background: rgba(255, 255, 255, 0.75);
+  -webkit-text-stroke: 0.5px #000;
+  color: #000;
+  transition: background 0.2s;
+}
+
+.social-links a:hover {
+  background: rgba(255, 255, 255, 0.92);
+}
+
+.social-links .icon {
+  width: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  margin-right: 12px;
+}
+
+.social-links .label {
+  width: 120px;
+  padding-left: 8px;
+}
+
+.social-links svg {
+  width: 22px;
+  height: 22px;
+  flex-shrink: 0;
+}
+
+/* ── Per-platform colors ──────────────────────────────────────── */
+
+.social-links a.youtube  { border-color: #ff0000; }
+.social-links a.spotify  { border-color: #1db954; }
+.social-links a.instagram { border-color: #d6249f; }
+.social-links a.applemusic { border-color: #fc3c44; }
+.social-links a.nina     { border-color: #333333; }
+.social-links a.gallery-link { border-color: #a0a0a0; }
+
+.social-links a.youtube svg   { fill: #ff0000; }
+.social-links a.spotify svg   { fill: #1db954; }
+.social-links a.instagram svg { fill: #d6249f; }
+.social-links a.applemusic svg { fill: #fc3c44; }
+.social-links a.gallery-link svg { fill: #333; }
